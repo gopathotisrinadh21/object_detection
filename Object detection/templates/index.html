@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Object Detection</title>
+</head>
+<body align="center">
+    <h1>Object Detection</h1>
+    <form method="POST" action="/detect" enctype="multipart/form-data">
+        <input type="file" name="image" accept=".jpg, .jpeg, .png">
+        <button type="submit">Detect Objects</button>
+    </form><br><br>
+    <div>
+        <!-- Display the uploaded image -->
+        <img id="image" style="max-width: 100%;">
+    </div>
+    <script>
+        const imageElement = document.getElementById("image");
+
+        const form = document.querySelector("form");
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch("/detect", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                // Load the detected image
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                imageElement.src = imageUrl;
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
